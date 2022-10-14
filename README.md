@@ -1,20 +1,18 @@
-# EXP-04-Interfacing a 16X2 type LCD display to LPC2148 ARM 7Microcontroller
+# EXP-04
+# Interfacing a 16X2 type LCD display to LPC2148 ARM 7Microcontroller
 
-Name :
+Name :B.PAVIZHI
 
-Roll no :
+Roll no :212221230077
 
-Date of experiment :
-
- 
+Date of experiment :14/10/22
 
 
-## Interfacing a 16X2 type LCD display to LPC2148 ARM 7 Microcontroller 
 
 ## Aim: 
-To Interface 16X2 type LCD display to LPC2148 ARM 7 and write a code for displaying a string to it
+      To Interface 16X2 type LCD display to LPC2148 ARM 7 and write a code for displaying a string to it
 ## Components required:
-Proteus ISIS professional suite, Kiel μ vision 5 Development environment 
+      Proteus ISIS professional suite, Kiel μ vision 5 Development environment 
 ## Theory 
  
 ## LCD16X2 
@@ -121,18 +119,93 @@ Figure -12 Hex file for simulation
 Step 9: Select the hex file from the Kiel program folder and import the program in to the microcontroller as shown in figure 11 ,  debug and if no errors in connections are found, run the VSM simulation to view the output.
 
 
-## Kiel - Program  
+## Kiel - Program:
+```
+#include<lpc214x.h>
+#include<stdint.h>
+#include<stdlib.h>
+#include<stdio.h>
+void delay_ms(uint16_t j)
+{
+	uint16_t x,i;
+	for(i=0;i<j;i++)
+	{
+		for(x=0;x<6000;x++);
+		
+	}
+}
+void LCD_CMD(char command)
+{
+	IO0PIN=((IO0PIN & 0xFFFF00FF) | (command<<8));
+	IO0SET= 0x00000040;
+	IO0CLR =0x00000030;
+	delay_ms(2);
+	IO0CLR =0x00000040;
+	delay_ms(5);
+}
+void LCD_INIT(void)
+{
+	
+	IO0DIR= 0x0000FFF0;
+	delay_ms(20);
+	LCD_CMD(0X38);
+	LCD_CMD(0X0C);
+	LCD_CMD(0X06);
+	LCD_CMD(0X01);
+	LCD_CMD(0X80);
+}
+void LCD_STRING(char* msg)
+{
+	uint8_t i=0;
+	while(msg[i]!=0)
+	{
+		IO0PIN=((IO0PIN & 0xFFFF00FF) | (msg[i]<<8));
+	  IO0SET= 0x00000050;
+	  IO0CLR =0x00000020;
+	  delay_ms(2);
+	  IO0CLR =0x00000040;
+	  delay_ms(5);
+		i++;
+	}
+}
+void LCD_CHAR(char msg)
+{
+	
+	  IO0PIN=((IO0PIN & 0xFFFF00FF) | (msg<<8));
+	  IO0SET= 0x00000050;
+	  IO0CLR =0x00000020;
+	  delay_ms(2);
+	  IO0CLR =0x00000040;
+	  delay_ms(5);
+}
+int main(void)
+{
+	
+	LCD_INIT();
+	LCD_STRING("Welcome to AI&DS");
+	LCD_CMD(0XC0);
+	LCD_STRING("212221230077");
+	
+	return 0;
+}
+```  
 
 
 
 
 
-## Proteus simulation 
+## Proteus simulation:
+## LCD ON:
+![](./o1.png)
+## LCD OFF:
+![](./off.png)
 
 
 
 
-##  layout Diagram 
+
+##  layout Diagram :
+![](./o2.png)
 
 
 
